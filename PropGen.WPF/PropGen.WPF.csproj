@@ -10,6 +10,18 @@
 
   <ItemGroup>
     <None Remove="Resources\AppIcon.ico" />
+    <None Remove="Resources\clear.png" />
+    <None Remove="Resources\clipboard.png" />
+    <None Remove="Resources\copied.png" />
+    <None Remove="Resources\open_file.png" />
+    <None Remove="Resources\save.png" />
+    <None Remove="Resources\sort.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\clear.png" />
+    <Resource Include="Resources\copied.png" />
+    <Resource Include="Resources\open_file.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +37,9 @@
 
   <ItemGroup>
     <Resource Include="Resources\AppIcon.ico" />
+    <Resource Include="Resources\clipboard.png" />
+    <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\sort.png" />
   </ItemGroup>
 
 </Project>

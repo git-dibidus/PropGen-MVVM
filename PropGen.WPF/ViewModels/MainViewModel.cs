@@ -7,10 +7,21 @@ using CommunityToolkit.Mvvm.Input;
 using ICSharpCode.AvalonEdit;
 using PropGen.Core.Models;
 using PropGen.Core.Services;
+using PropGen.WPF.Helpers;
 using PropGen.WPF.Services;
 
 namespace PropGen.WPF.ViewModels
 {
+    /// <summary>
+    /// The main view model for the Property Generator application.
+    /// Handles all business logic for the UI including:
+    /// - Parsing input text or source files for property definitions
+    /// - Generating property code based on user preferences
+    /// - Managing application state and settings
+    /// - Handling file operations (open/save)
+    /// - Providing commands for UI interactions
+    /// - Managing editor operations (copy/paste/cut/select)
+    /// </summary>
     public partial class MainViewModel : ObservableObject
     {
         #region Fields
@@ -61,6 +72,9 @@ namespace PropGen.WPF.ViewModels
 
         [ObservableProperty]
         private bool isCopiedToClipboardVisible = false;
+
+        [ObservableProperty]
+        private bool isSortEnabled = false;
 
         #endregion
 
@@ -300,6 +314,19 @@ namespace PropGen.WPF.ViewModels
             }
         }
 
+        [RelayCommand]
+        private void SortLines()
+        {            
+            try
+            {
+                InputText = LineSortHelper.SortLines(InputText);
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowMessage($"Error sorting lines: {ex.Message}", MessageType.Error);
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -317,6 +344,7 @@ namespace PropGen.WPF.ViewModels
             PasteInputCommand.NotifyCanExecuteChanged();
             CutInputCommand.NotifyCanExecuteChanged();
             SelectAllInputCommand.NotifyCanExecuteChanged();
+            IsSortEnabled = !IsFileParser && !string.IsNullOrWhiteSpace(InputText);
         }
 
         private void RaiseAllCanExecuteOutputChanged()

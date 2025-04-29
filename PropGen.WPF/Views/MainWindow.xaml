@@ -97,28 +97,57 @@
                           IsChecked="{Binding AppData.Options.IsCompactStyle}" 
                           IsEnabled="{Binding AppData.Options.IsMvvmToolkitStyle, Converter={StaticResource InverseBooleanConverter}}" 
                           VerticalAlignment="Center" 
-                          Margin="30,5" />
+                          Margin="30,0" />
                 <CheckBox Grid.Column="1" Grid.Row="2" Content="MVVM Toolkit Style" 
                           IsChecked="{Binding AppData.Options.IsMvvmToolkitStyle}"                           
-                          Margin="30,5" />
+                          VerticalAlignment="Center" 
+                          Margin="30,0" />
 
                 <CheckBox Grid.Column="2" Grid.Row="0" 
                           Content="Implement Notification Interface" 
                           IsChecked="{Binding AppData.Options.ImplementNotificationInterface}" 
                           IsEnabled="{Binding IsFileParser}"
                           Margin="30,10" />
-                
-                <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Margin="30,5">
-                    <Label Content="Field Naming Style" Margin="0,0,10,0" />
-                    <ComboBox Width="180"
+
+                <Grid Grid.Column="2" Grid.Row="1" Grid.RowSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Field Naming Style" Margin="30,0,10,0" />
+                    <ComboBox Grid.Row="0" Grid.Column="1"
+                              Width="180"
                               ItemsSource="{Binding NamingStyleOptions}"
                               SelectedItem="{Binding SelectedNamingStyle, Mode=TwoWay}"
                               DisplayMemberPath="Value" />
+
+                    <Label Grid.Row="1" Grid.Column="0" 
+                           Content="Field Prefix: " 
+                           IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}"
+                           Margin="30,0,10,0" />
+                    <TextBox Grid.Row="1" Grid.Column="1"
+                             Width="50" 
+                             Text="{Binding AppData.Options.FieldPrefix}" 
+                             IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}"
+                             HorizontalAlignment="Left"
+                             MaxHeight="24"
+                             BorderThickness="1" BorderBrush="Black" Padding="3,0" />
+                </Grid>
+                
+                <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Margin="30,5">
+                    
+                    
                 </StackPanel>
                 <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" Margin="30,5" 
                             IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}">
-                    <Label Content="Field Prefix: " Margin="0,0,10,0" />
-                    <TextBox Width="50" Text="{Binding AppData.Options.FieldPrefix}" BorderThickness="1" BorderBrush="Black" Padding="3" />
+                    
+                    
                 </StackPanel>
 
                 <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Content="Generate" 
@@ -154,11 +183,29 @@
                             IsEnabled="{Binding IsFileParser}"
                             Command="{Binding OpenFileCommand}"
                             Style="{StaticResource RoundedButtonStyle}">
-                        <Image Source="/Resources/open_file.png" />
+                        <Image Width="30" Height="30" Source="/Resources/open_file.png" />
                         <Button.ToolTip>
                             <ToolTip>
                                 <StackPanel>
                                     <TextBlock FontWeight="Bold">Open existing C# file</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+
+                    <Button 
+                        Margin="10,5"                           
+                        Width="40"  
+                        Height="40"
+                        helpers:ButtonHelper.CornerRadius="10"   
+                        IsEnabled="{Binding IsSortEnabled}"
+                        Command="{Binding SortLinesCommand}"
+                        Style="{StaticResource RoundedButtonStyle}">
+                        <Image Width="30" Height="30" Source="/Resources/sort.png" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold">Sort properties alphabetically</TextBlock>
                                 </StackPanel>
                             </ToolTip>
                         </Button.ToolTip>
@@ -172,7 +219,7 @@
                             Command="{Binding ClearAllCommand}" 
                             helpers:ButtonHelper.CornerRadius="10"
                             Style="{StaticResource RoundedButtonStyle}">
-                        <Image Width="24" Height="24" Source="/Resources/clear.png" />
+                        <Image Width="30" Height="30" Source="/Resources/clear.png" />
                         <Button.ToolTip>
                             <ToolTip>
                                 <StackPanel>
@@ -191,7 +238,7 @@
                         IsEnabled="{Binding IsSaveFileEnabled}"
                         Command="{Binding SaveFileCommand}"
                         Style="{StaticResource RoundedButtonStyle}">
-                        <Image Width="24" Height="24" Source="/Resources/save.png"/>
+                        <Image Width="30" Height="30" Source="/Resources/save.png"/>
                         <Button.ToolTip>
                             <ToolTip>
                                 <StackPanel>
@@ -209,7 +256,7 @@
                         IsEnabled="{Binding GeneratedCode, Converter={StaticResource StringNotEmptyConverter}}"
                         Command="{Binding CopyToClipboardCommand}"
                         Style="{StaticResource RoundedButtonStyle}">
-                        <Image Width="29" Height="29" Source="/Resources/clipboard.png"/>
+                        <Image Width="30" Height="30" Source="/Resources/clipboard.png"/>
                         <Button.ToolTip>
                             <ToolTip>
                                 <StackPanel>
