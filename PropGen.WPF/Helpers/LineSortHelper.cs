@@ -51,11 +51,16 @@ namespace PropGen.WPF.Helpers
             // Append invalid lines at the bottom
             sortedLines.AddRange(invalidLines);
 
-
             var sb = new StringBuilder();
+            int lineCount = sortedLines.Count;
             foreach (var line in sortedLines)
             {
-               sb.AppendLine(line);
+                lineCount--;
+
+                if (lineCount > 0)
+                    sb.AppendLine(line);
+                else
+                    sb.Append(line);
             }           
 
             return sb.ToString();
