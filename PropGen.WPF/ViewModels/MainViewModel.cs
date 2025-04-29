@@ -4,55 +4,20 @@ using System.Text;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ICSharpCode.AvalonEdit;
 using PropGen.Core.Models;
 using PropGen.Core.Services;
 using PropGen.WPF.Services;
-using ICSharpCode.AvalonEdit;
 
 namespace PropGen.WPF.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
-        public Action? CloseAction { get; set; }
-
-        [ObservableProperty]
-        private ApplicationData appData = new ApplicationData();
-
-        [ObservableProperty]
-        private ObservableCollection<KeyValuePair<FieldNamingStyle, string>> namingStyleOptions;
-
-        [ObservableProperty]
-        private KeyValuePair<FieldNamingStyle, string> selectedNamingStyle;
-
-        public ObservableCollection<int> ErrorLines { get; } = new();
-        
-        [ObservableProperty]
-        private bool isFileParser = false;
-        [ObservableProperty]
-        private string inputText = string.Empty;
-        [ObservableProperty]
-        private string generatedCode = string.Empty;
-        [ObservableProperty]
-        private string statusText = string.Empty;
-        [ObservableProperty]
-        private string modeText = string.Empty;
-        [ObservableProperty]
-        private bool isSaveFileEnabled = false;
-        [ObservableProperty]
-        private bool isCopiedToClipboardVisible = false;
-
-        partial void OnIsFileParserChanged(bool value) => ApplyModeChange(value);
-        partial void OnSelectedNamingStyleChanged(KeyValuePair<FieldNamingStyle, string> value)
-        {
-            if (value.Key != AppData.Options.FieldNamingStyle)
-            {
-                AppData.Options.FieldNamingStyle = value.Key;
-            }
-        }
+        #region Fields
 
         private string _className = string.Empty;
-        private ICSharpCode.AvalonEdit.TextEditor? _inputEditor;
-        private ICSharpCode.AvalonEdit.TextEditor? _outputEditor;
+        private TextEditor? _inputEditor;
+        private TextEditor? _outputEditor;
 
         private readonly IAppDataService _appDataService;
         private readonly IDialogService _dialogService;
@@ -60,8 +25,50 @@ namespace PropGen.WPF.ViewModels
         private readonly ISourceParserService _sourceParserService;
         private readonly IPropertyCodeGenerator _propertyCodeGenerator;
 
-        public MainViewModel(ITextParserService textParserService,
-            ISourceParserService sourceParserService,   
+        #endregion
+
+        #region Properties
+
+        public Action? CloseAction { get; set; }
+        public ObservableCollection<int> ErrorLines { get; } = new();
+
+        [ObservableProperty]
+        private ApplicationData appData = new();
+
+        [ObservableProperty]
+        private ObservableCollection<KeyValuePair<FieldNamingStyle, string>> namingStyleOptions;
+
+        [ObservableProperty]
+        private KeyValuePair<FieldNamingStyle, string> selectedNamingStyle;
+
+        [ObservableProperty]
+        private bool isFileParser = false;
+
+        [ObservableProperty]
+        private string inputText = string.Empty;
+
+        [ObservableProperty]
+        private string generatedCode = string.Empty;
+
+        [ObservableProperty]
+        private string statusText = string.Empty;
+
+        [ObservableProperty]
+        private string modeText = string.Empty;
+
+        [ObservableProperty]
+        private bool isSaveFileEnabled = false;
+
+        [ObservableProperty]
+        private bool isCopiedToClipboardVisible = false;
+
+        #endregion
+
+        #region Constructors
+
+        public MainViewModel(
+            ITextParserService textParserService,
+            ISourceParserService sourceParserService,
             IPropertyCodeGenerator propertyCodeGenerator,
             IAppDataService appDataService,
             IDialogService dialogService)
@@ -72,8 +79,12 @@ namespace PropGen.WPF.ViewModels
             _propertyCodeGenerator = propertyCodeGenerator;
             _dialogService = dialogService;
 
-            NamingStyleOptions = GetFieldNamingStyles();            
+            NamingStyleOptions = GetFieldNamingStyles();
         }
+
+        #endregion
+
+        #region Initialization
 
         public void Initialize(TextEditor inputEditor, TextEditor outputEditor)
         {
@@ -86,6 +97,24 @@ namespace PropGen.WPF.ViewModels
             _outputEditor.TextArea.SelectionChanged += (s, e) => RaiseAllCanExecuteOutputChanged();
             _outputEditor.TextChanged += (s, e) => RaiseAllCanExecuteOutputChanged();
         }
+
+        #endregion
+
+        #region Property Changed Handlers
+
+        partial void OnIsFileParserChanged(bool value) => ApplyModeChange(value);
+
+        partial void OnSelectedNamingStyleChanged(KeyValuePair<FieldNamingStyle, string> value)
+        {
+            if (value.Key != AppData.Options.FieldNamingStyle)
+            {
+                AppData.Options.FieldNamingStyle = value.Key;
+            }
+        }
+
+        #endregion
+
+        #region Command Methods
 
         [RelayCommand(CanExecute = nameof(CanCopyInput))]
         private void CopyInput() => _inputEditor?.Copy();
@@ -105,29 +134,6 @@ namespace PropGen.WPF.ViewModels
         [RelayCommand(CanExecute = nameof(CanSelectAllOutput))]
         private void SelectAllOutput() => _outputEditor?.SelectAll();
 
-
-        private bool CanCopyInput() => _inputEditor != null && !_inputEditor.TextArea.Selection.IsEmpty;
-        private bool CanPasteInput() => Clipboard.ContainsText();
-        private bool CanCutInput() => _inputEditor != null && !_inputEditor.TextArea.Selection.IsEmpty;
-        private bool CanSelectAllInput() => _inputEditor != null && !string.IsNullOrWhiteSpace(_inputEditor.Text);
-
-        private bool CanCopyOutput() => _outputEditor != null && !_outputEditor.TextArea.Selection.IsEmpty;
-        private bool CanSelectAllOutput() => _outputEditor != null && !string.IsNullOrWhiteSpace(_outputEditor.Text);        
-
-        private void RaiseAllCanExecuteInputChanged()
-        {
-            CopyInputCommand.NotifyCanExecuteChanged();
-            PasteInputCommand.NotifyCanExecuteChanged();
-            CutInputCommand.NotifyCanExecuteChanged();
-            SelectAllInputCommand.NotifyCanExecuteChanged();
-        }
-
-        private void RaiseAllCanExecuteOutputChanged()
-        {
-            CopyOutputCommand.NotifyCanExecuteChanged();
-            SelectAllOutputCommand.NotifyCanExecuteChanged();
-        }
-
         [RelayCommand]
         private void Generate()
         {
@@ -137,13 +143,20 @@ namespace PropGen.WPF.ViewModels
                 return;
             }
 
+            if (AppData.Options.FieldNamingStyle == FieldNamingStyle.PrefixedCamelCase &&
+                string.IsNullOrWhiteSpace(AppData.Options.FieldPrefix))
+            {
+                _dialogService.ShowMessage("Field Prefix must be specified if 'Prefixed Camel Case' selected.", MessageType.Warning);
+                return;
+            }
+
             try
             {
                 StatusText = string.Empty;
                 ErrorLines.Clear();
 
-                PropertyParserResult result = IsFileParser ? 
-                    _sourceParserService.ParseSource(InputText) : 
+                PropertyParserResult result = IsFileParser ?
+                    _sourceParserService.ParseSource(InputText) :
                     _textParserService.ParseText(InputText);
 
                 if (result.HasIssues)
@@ -165,7 +178,6 @@ namespace PropGen.WPF.ViewModels
                 }
 
                 GeneratedCodeResult genResult = _propertyCodeGenerator.GenerateProperties(result.Classes, AppData.Options);
-
                 GeneratedCode = genResult.Content;
 
                 if (genResult.PropertyCount > 0)
@@ -174,12 +186,11 @@ namespace PropGen.WPF.ViewModels
                         StatusText += Environment.NewLine;
 
                     string issuesMessage = result.HasIssues ? " (with issues)" : "";
-
                     StatusText += $"Generated {genResult.PropertyCount} properties{issuesMessage}.";
 
                     IsSaveFileEnabled = IsFileParser;
-                    _className = genResult.Classes.First().ClassName; // Name of the first class in the list to be used for Save File
-                }                                                               
+                    _className = genResult.Classes.First().ClassName;
+                }
             }
             catch (Exception ex)
             {
@@ -193,31 +204,29 @@ namespace PropGen.WPF.ViewModels
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (files != null && files.Length > 0)
+                if (files == null || files.Length == 0) return;
+
+                if (files.Length > 1)
                 {
-                    if (files.Length > 1)
+                    _dialogService.ShowMessage("Only one file can be dropped at a time.", MessageType.Warning);
+                    return;
+                }
+
+                string filePath = files[0];
+                try
+                {
+                    string extension = Path.GetExtension(filePath).ToLower();
+                    if (extension != ".cs")
                     {
-                        _dialogService.ShowMessage("Only one file can be dropped at a time.", MessageType.Warning);
+                        _dialogService.ShowMessage("Only C# files are supported.", MessageType.Warning);
                         return;
                     }
 
-                    string filePath = files[0];
-                    try
-                    {
-                        // Check if the file is a C# file
-                        string extension = Path.GetExtension(filePath).ToLower();
-                        if (extension != ".cs")
-                        {
-                            _dialogService.ShowMessage("Only C# files are supported.", MessageType.Warning);
-                            return;
-                        }
-
-                        InputText = await File.ReadAllTextAsync(filePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        _dialogService.ShowMessage($"Error loading file: {ex.Message}", MessageType.Error);
-                    }
+                    InputText = await File.ReadAllTextAsync(filePath);
+                }
+                catch (Exception ex)
+                {
+                    _dialogService.ShowMessage($"Error loading file: {ex.Message}", MessageType.Error);
                 }
             }
         }
@@ -231,17 +240,6 @@ namespace PropGen.WPF.ViewModels
             }
 
             ClearAllWithoutConfirmation();
-        }
-
-        private void ClearAllWithoutConfirmation()
-        {
-            InputText = string.Empty;
-            GeneratedCode = string.Empty;
-            StatusText = string.Empty;
-            ErrorLines.Clear();
-            IsSaveFileEnabled = false;
-            IsCopiedToClipboardVisible = false;
-            _className = string.Empty;
         }
 
         [RelayCommand]
@@ -270,11 +268,11 @@ namespace PropGen.WPF.ViewModels
         [RelayCommand]
         private void SaveFile()
         {
-            string fileName = string.IsNullOrEmpty(_className) ?
-                "GeneratedProperties.cs" :
-                $"{_className}.mvvm.cs";
+            string fileName = string.IsNullOrEmpty(_className)
+                ? "GeneratedProperties.cs"
+                : $"{_className}.mvvm.cs";
 
-            string ? filePath = _dialogService.SaveFile("C# Files (*.cs)|*.cs", fileName);
+            string? filePath = _dialogService.SaveFile("C# Files (*.cs)|*.cs", fileName);
             if (filePath != null)
             {
                 try
@@ -290,7 +288,7 @@ namespace PropGen.WPF.ViewModels
 
         [RelayCommand]
         private void CopyToClipboard()
-        {           
+        {
             try
             {
                 Clipboard.SetText(GeneratedCode);
@@ -302,6 +300,63 @@ namespace PropGen.WPF.ViewModels
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
+        private bool CanCopyInput() => _inputEditor != null && !_inputEditor.TextArea.Selection.IsEmpty;
+        private bool CanPasteInput() => Clipboard.ContainsText();
+        private bool CanCutInput() => _inputEditor != null && !_inputEditor.TextArea.Selection.IsEmpty;
+        private bool CanSelectAllInput() => _inputEditor != null && !string.IsNullOrWhiteSpace(_inputEditor.Text);
+        private bool CanCopyOutput() => _outputEditor != null && !_outputEditor.TextArea.Selection.IsEmpty;
+        private bool CanSelectAllOutput() => _outputEditor != null && !string.IsNullOrWhiteSpace(_outputEditor.Text);
+
+        private void RaiseAllCanExecuteInputChanged()
+        {
+            CopyInputCommand.NotifyCanExecuteChanged();
+            PasteInputCommand.NotifyCanExecuteChanged();
+            CutInputCommand.NotifyCanExecuteChanged();
+            SelectAllInputCommand.NotifyCanExecuteChanged();
+        }
+
+        private void RaiseAllCanExecuteOutputChanged()
+        {
+            CopyOutputCommand.NotifyCanExecuteChanged();
+            SelectAllOutputCommand.NotifyCanExecuteChanged();
+        }
+
+        private void ClearAllWithoutConfirmation()
+        {
+            InputText = string.Empty;
+            GeneratedCode = string.Empty;
+            StatusText = string.Empty;
+            ErrorLines.Clear();
+            IsSaveFileEnabled = false;
+            IsCopiedToClipboardVisible = false;
+            _className = string.Empty;
+        }
+
+        private void ApplyModeChange(bool isFileMode)
+        {
+            ModeText = isFileMode ? "File Input Mode" : "Text Input Mode";
+            ClearAllWithoutConfirmation();
+            AppData.IsFileParser = isFileMode;
+        }
+
+        private ObservableCollection<KeyValuePair<FieldNamingStyle, string>> GetFieldNamingStyles()
+        {
+            return new ObservableCollection<KeyValuePair<FieldNamingStyle, string>>
+            {
+                new(FieldNamingStyle.UnderscoreCamelCase, "Underscore Camel Case"),
+                new(FieldNamingStyle.CamelCase, "Camel Case"),
+                new(FieldNamingStyle.PrefixedCamelCase, "Prefixed Camel Case")
+            };
+        }
+
+        #endregion
+
+        #region App Data Methods
+
         public void LoadAppData()
         {
             try
@@ -309,7 +364,6 @@ namespace PropGen.WPF.ViewModels
                 AppData = _appDataService.Load();
                 IsFileParser = AppData.IsFileParser;
                 SelectedNamingStyle = NamingStyleOptions.Single(x => x.Key == AppData.Options.FieldNamingStyle);
-
                 ApplyModeChange(IsFileParser);
             }
             catch (Exception ex)
@@ -330,22 +384,6 @@ namespace PropGen.WPF.ViewModels
             }
         }
 
-        private void ApplyModeChange(bool isFileMode)
-        {
-            ModeText = isFileMode ? "File Input Mode" : "Text Input Mode";
-
-            ClearAllWithoutConfirmation();
-            AppData.IsFileParser = isFileMode;            
-        }
-
-        private ObservableCollection<KeyValuePair<FieldNamingStyle, string>> GetFieldNamingStyles()
-        {
-            return new ObservableCollection<KeyValuePair<FieldNamingStyle, string>>
-            {
-                new(FieldNamingStyle.UnderscoreCamelCase, "Underscore Camel Case"),
-                new(FieldNamingStyle.CamelCase, "Camel Case"),
-                new(FieldNamingStyle.PrefixedCamelCase, "Prefixed Camel Case")
-            };
-        }
+        #endregion
     }
 }
