@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:PropGen.WPF.Converters">
+    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:FieldNamingStyleToBooleanConverter x:Key="FieldNamingStyleToBooleanConverter" />
+</ResourceDictionary>
