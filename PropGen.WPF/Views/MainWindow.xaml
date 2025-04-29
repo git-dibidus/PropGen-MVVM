@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:PropGen.WPF.Views"
-        xmlns:controls="clr-namespace:PropGen.WPF.Controls"
-        xmlns:converters="clr-namespace:PropGen.WPF.Converters"
+        xmlns:controls="clr-namespace:PropGen.WPF.Controls"        
         xmlns:helpers="clr-namespace:PropGen.WPF.Helpers"
         xmlns:behavior="clr-namespace:PropGen.WPF.Behaviors" xmlns:viewmodels="clr-namespace:PropGen.WPF.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Title="Propery Generator for MVVM" 
-        Height="{Binding AppData.Window.Height, Mode=TwoWay}" Width="{Binding AppData.Window.Width, Mode=TwoWay}"
-        Top="{Binding AppData.Window.Top, Mode=TwoWay}" Left="{Binding AppData.Window.Left, Mode=TwoWay}"        
+        Width="{Binding AppData.Window.Width, Mode=TwoWay}"
+        Height="{Binding AppData.Window.Height, Mode=TwoWay}"         
+        Top="{Binding AppData.Window.Top, Mode=TwoWay}" 
+        Left="{Binding AppData.Window.Left, Mode=TwoWay}"        
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         MinWidth="1000" MinHeight="450"
@@ -22,9 +23,12 @@
         Icon="/Resources/AppIcon.ico">
 
     <Window.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-        <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
-        <converters:FieldNamingStyleToBooleanConverter x:Key="FieldNamingStyleToBooleanConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Converters.xaml" />
+                <ResourceDictionary Source="/Styles/RoundedButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     
     <Grid>
@@ -48,7 +52,7 @@
             </MenuItem>
         </Menu>
         
-        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Margin="5,5,5,0" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="Transparent" >
+        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Margin="5,5,5,0" Padding="0,5" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="Transparent" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -58,6 +62,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -87,7 +92,7 @@
 
                 <CheckBox Grid.Column="1" Grid.Row="0" Content="Wrap in Regions" 
                           IsChecked="{Binding AppData.Options.WrapInRegions}" 
-                          Margin="30,5" />
+                          Margin="30,10" />
                 <CheckBox Grid.Column="1" Grid.Row="1" Content="Compact Style" 
                           IsChecked="{Binding AppData.Options.IsCompactStyle}" 
                           IsEnabled="{Binding AppData.Options.IsMvvmToolkitStyle, Converter={StaticResource InverseBooleanConverter}}" 
@@ -101,7 +106,7 @@
                           Content="Implement Notification Interface" 
                           IsChecked="{Binding AppData.Options.ImplementNotificationInterface}" 
                           IsEnabled="{Binding IsFileParser}"
-                          Margin="30,5" />
+                          Margin="30,10" />
                 
                 <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Margin="30,5">
                     <Label Content="Field Naming Style" Margin="0,0,10,0" />
@@ -119,10 +124,101 @@
                 <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Content="Generate" 
                         Command="{Binding GenerateCommand}" 
                         IsEnabled="{Binding InputText, Converter={StaticResource StringNotEmptyConverter}}"
+                        Style="{StaticResource RoundedButtonStyle}"
+                        helpers:ButtonHelper.CornerRadius="15"
+                        FontFamily="Segoe UI"
+                        FontSize="16"
                         Margin="10"
                         Padding="10,2" 
                         HorizontalAlignment="Right"
                         Width="150"  />
+
+                <StackPanel Grid.Column="3" Grid.Row="2" Orientation="Horizontal" 
+                            Visibility="{Binding IsCopiedToClipboardVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Center">
+                    <Label Content="Copied to Clipboard" 
+                           FontFamily="Segoe UI"
+                           FontSize="12pt"
+                           Foreground="Green"
+                           Margin="0,0,10,0" />
+                    <Image Width="32" Height="32" Source="/Resources/copied.png" Margin="0,0,15,0" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
+                    <Button 
+                            Margin="10,5"                           
+                            Width="40"  
+                            Height="40"
+                            helpers:ButtonHelper.CornerRadius="10"   
+                            IsEnabled="{Binding IsFileParser}"
+                            Command="{Binding OpenFileCommand}"
+                            Style="{StaticResource RoundedButtonStyle}">
+                        <Image Source="/Resources/open_file.png" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold">Open existing C# file</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+
+                    <Button 
+                            Margin="10,5"                           
+                            Width="40"  
+                            Height="40"
+                            IsEnabled="{Binding InputText, Converter={StaticResource StringNotEmptyConverter}}"
+                            Command="{Binding ClearAllCommand}" 
+                            helpers:ButtonHelper.CornerRadius="10"
+                            Style="{StaticResource RoundedButtonStyle}">
+                        <Image Width="24" Height="24" Source="/Resources/clear.png" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold">Clear input panel</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+                    <Button 
+                        Margin="10,5"                           
+                        Width="40"  
+                        Height="40"
+                        helpers:ButtonHelper.CornerRadius="10" 
+                        IsEnabled="{Binding IsSaveFileEnabled}"
+                        Command="{Binding SaveFileCommand}"
+                        Style="{StaticResource RoundedButtonStyle}">
+                        <Image Width="24" Height="24" Source="/Resources/save.png"/>
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold">Save to a file</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+
+                    <Button 
+                        Margin="10,5"                           
+                        Width="40"  
+                        Height="40"
+                        helpers:ButtonHelper.CornerRadius="10"
+                        IsEnabled="{Binding GeneratedCode, Converter={StaticResource StringNotEmptyConverter}}"
+                        Command="{Binding CopyToClipboardCommand}"
+                        Style="{StaticResource RoundedButtonStyle}">
+                        <Image Width="29" Height="29" Source="/Resources/clipboard.png"/>
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold">Copy to Clipboard</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
                 
@@ -151,17 +247,17 @@
         </Border>
 
         <GridSplitter Grid.Column="1" Grid.Row="2"  Width="4" Background="Gray" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext" Margin="0,5"/>
-
+               
         <Border  Grid.Column="2" Grid.Row="2" Margin="5" Padding="5" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="WhiteSmoke">
             <avalon:TextEditor  
-                x:Name="OutputText"               
-                behavior:AvalonEditBehavior.Text="{Binding GeneratedCode, Mode=TwoWay}" 
-                FontFamily="Consolas" 
-                FontSize="12pt"
-                Padding="10,5,0,0"                
-                Background="WhiteSmoke"
-                SyntaxHighlighting="C#"
-                IsReadOnly="True" >
+                    x:Name="OutputText"               
+                    behavior:AvalonEditBehavior.Text="{Binding GeneratedCode, Mode=TwoWay}" 
+                    FontFamily="Consolas" 
+                    FontSize="12pt"
+                    Padding="10,5,0,0"                
+                    Background="WhiteSmoke"
+                    SyntaxHighlighting="C#"
+                    IsReadOnly="True" >
                 <avalon:TextEditor.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Copy" Command="{Binding CopyOutputCommand}" />
