@@ -50,5 +50,27 @@ namespace PropGen.WPF.Services
         {
             MsgBox.Show(message, type, caption);
         }
+
+        public string? OpenFile(string filter)
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = filter,
+                Multiselect = false
+            };
+            bool? result = openFileDialog.ShowDialog();
+            return result == true ? openFileDialog.FileName : null;
+        }
+
+        public string? SaveFile(string filter, string defaultFileName = "")
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = filter,
+                FileName = defaultFileName
+            };
+
+            return dialog.ShowDialog() == true ? dialog.FileName : null;
+        }
     }
 }

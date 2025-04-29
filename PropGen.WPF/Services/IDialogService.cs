@@ -9,5 +9,7 @@ namespace PropGen.WPF.Services
         bool AskYesNoDialog(string message, string title);
         void ShowMessage(string message, MessageType type);
         void ShowMessage(string message, MessageType type, string caption);
+        string? OpenFile(string filter);
+        string? SaveFile(string filter, string defaultFileName = "");
     }
 }
