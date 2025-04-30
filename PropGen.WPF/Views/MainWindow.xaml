@@ -45,7 +45,7 @@
             <Style x:Key="IconButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButtonStyle}">
                 <Setter Property="Width" Value="40"/>
                 <Setter Property="Height" Value="40"/>
-                <Setter Property="Margin" Value="10,5"/>
+                <Setter Property="Margin" Value="10,5,0,5"/>
                 <Setter Property="helpers:ButtonHelper.CornerRadius" Value="10"/>
             </Style>
 
@@ -111,18 +111,15 @@
                 </StackPanel>
 
                 <Label Grid.Column="0" Grid.Row="2" 
-                       Content="{Binding ModeText}" 
-                       BorderThickness="1"
-                       BorderBrush="Black"
-                       MaxHeight="28"
+                       Content="{Binding ModeText}"                                      
                        Width="170"
-                       Background="LightYellow"                       
-                       HorizontalContentAlignment="Center"                       
-                       VerticalContentAlignment="Center"                                                                     
+                       Background="Transparent"                       
+                       HorizontalContentAlignment="Left"                       
+                       VerticalContentAlignment="Top"                                                                     
                        FontSize="11pt"
                        FontWeight="Bold"
                        Padding="0"                       
-                       Margin="10,0,0,0" />
+                       Margin="20,0,0,0" />
 
                 <CheckBox Grid.Column="1" Grid.Row="0" Content="Wrap in Regions" 
                           IsChecked="{Binding AppData.Options.WrapInRegions}" 
@@ -132,12 +129,12 @@
                           IsChecked="{Binding AppData.Options.IsCompactStyle}" 
                           IsEnabled="{Binding AppData.Options.IsMvvmToolkitStyle, Converter={StaticResource InverseBooleanConverter}}" 
                           VerticalAlignment="Center" 
-                          Margin="30,0" />
+                          Margin="30,5,0,0" />
                 
                 <CheckBox Grid.Column="1" Grid.Row="2" Content="MVVM Toolkit Style" 
                           IsChecked="{Binding AppData.Options.IsMvvmToolkitStyle}"                           
                           VerticalAlignment="Center" 
-                          Margin="30,0" />
+                          Margin="30,15,0,0" />
 
                 <CheckBox Grid.Column="2" Grid.Row="0" 
                           Content="Implement Notification Interface" 
@@ -157,6 +154,7 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" Content="Field Naming Style" Margin="30,0,10,0" />
+                    
                     <ComboBox Grid.Row="0" Grid.Column="1"
                               Width="180"
                               ItemsSource="{Binding NamingStyleOptions}"
@@ -166,13 +164,15 @@
                     <Label Grid.Row="1" Grid.Column="0" 
                            Content="Field Prefix: " 
                            IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}"
-                           Margin="30,0,10,0" />
+                           Margin="30,5,10,0" />
+                    
                     <TextBox Grid.Row="1" Grid.Column="1"
                              Width="50" 
                              Text="{Binding AppData.Options.FieldPrefix}" 
                              IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}"
                              HorizontalAlignment="Left"
                              MaxHeight="24"
+                             Margin="0,5,0,0"
                              BorderThickness="1" BorderBrush="Black" Padding="3,0" />
                 </Grid>
                 
@@ -200,10 +200,12 @@
                             Visibility="{Binding IsCopiedToClipboardVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                             HorizontalAlignment="Right" 
                             VerticalAlignment="Center">
+                    
                     <Label Content="Copied to Clipboard"                            
                            FontSize="11pt"
                            Foreground="Green"
                            Margin="0,0,10,0" />
+                    
                     <Image Width="26" Height="26" Source="/Resources/copied.png" Margin="0,0,18,0" />
                 </StackPanel>
 
@@ -267,7 +269,8 @@
                     <Button 
                         Command="{Binding CopyToClipboardCommand}"
                         IsEnabled="{Binding GeneratedCode, Converter={StaticResource StringNotEmptyConverter}}"                        
-                        Style="{StaticResource IconButtonStyle}">
+                        Style="{StaticResource IconButtonStyle}"
+                        Margin="10,5">
                         <Image Width="30" Height="30" Source="/Resources/clipboard.png"/>
                         <Button.ToolTip>
                             <ToolTip>
