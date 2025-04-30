@@ -7,9 +7,11 @@
         xmlns:local="clr-namespace:PropGen.WPF.Views"
         xmlns:controls="clr-namespace:PropGen.WPF.Controls"        
         xmlns:helpers="clr-namespace:PropGen.WPF.Helpers"
-        xmlns:behavior="clr-namespace:PropGen.WPF.Behaviors" xmlns:viewmodels="clr-namespace:PropGen.WPF.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        xmlns:behavior="clr-namespace:PropGen.WPF.Behaviors" 
+        xmlns:viewmodels="clr-namespace:PropGen.WPF.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="Propery Generator for MVVM" 
+        Title="MVVM Property Generator" 
         Width="{Binding AppData.Window.Width, Mode=TwoWay}"
         Height="{Binding AppData.Window.Height, Mode=TwoWay}"         
         Top="{Binding AppData.Window.Top, Mode=TwoWay}" 
@@ -28,9 +30,38 @@
                 <ResourceDictionary Source="/Styles/Converters.xaml" />
                 <ResourceDictionary Source="/Styles/RoundedButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Border Style -->
+            <Style x:Key="StandardBorderStyle" TargetType="Border">
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="CornerRadius" Value="5"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="5"/>
+            </Style>
+
+            <!-- Button Style -->
+            <Style x:Key="IconButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButtonStyle}">
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Margin" Value="10,5"/>
+                <Setter Property="helpers:ButtonHelper.CornerRadius" Value="10"/>
+            </Style>
+
+            <!-- TextEditor Style -->
+            <Style x:Key="TextEditorStyle" TargetType="avalon:TextEditor">
+                <Setter Property="FontFamily" Value="Consolas"/>
+                <Setter Property="FontSize" Value="12pt"/>
+                <Setter Property="Padding" Value="10,5,0,0"/>
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
-    
+
+    <Window.InputBindings>
+        <KeyBinding Key="F10" Command="{Binding GenerateCommand}"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -48,11 +79,15 @@
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
               FontFamily="Segoe UI" FontSize="10pt">
             <MenuItem Header="_File">
+                <MenuItem Header="_Open C# File" Command="{Binding OpenFileCommand}" IsEnabled="{Binding IsFileParser}" />
+                <MenuItem Header="_Save File" Command="{Binding SaveFileCommand}" IsEnabled="{Binding IsSaveFileEnabled}" />
+                <Separator />
                 <MenuItem Header="_Exit" Command="{Binding CloseCommand}" />
             </MenuItem>
         </Menu>
         
-        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Margin="5,5,5,0" Padding="0,5" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="Transparent" >
+        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" 
+                Style="{StaticResource StandardBorderStyle}" Margin="5,5,5,0" Padding="0,5" Background="Transparent" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -83,8 +118,7 @@
                        Width="170"
                        Background="LightYellow"                       
                        HorizontalContentAlignment="Center"                       
-                       VerticalContentAlignment="Center"                                              
-                       FontFamily="Segoe UI"
+                       VerticalContentAlignment="Center"                                                                     
                        FontSize="11pt"
                        FontWeight="Bold"
                        Padding="0"                       
@@ -93,11 +127,13 @@
                 <CheckBox Grid.Column="1" Grid.Row="0" Content="Wrap in Regions" 
                           IsChecked="{Binding AppData.Options.WrapInRegions}" 
                           Margin="30,10" />
+                
                 <CheckBox Grid.Column="1" Grid.Row="1" Content="Compact Style" 
                           IsChecked="{Binding AppData.Options.IsCompactStyle}" 
                           IsEnabled="{Binding AppData.Options.IsMvvmToolkitStyle, Converter={StaticResource InverseBooleanConverter}}" 
                           VerticalAlignment="Center" 
                           Margin="30,0" />
+                
                 <CheckBox Grid.Column="1" Grid.Row="2" Content="MVVM Toolkit Style" 
                           IsChecked="{Binding AppData.Options.IsMvvmToolkitStyle}"                           
                           VerticalAlignment="Center" 
@@ -151,12 +187,10 @@
                 </StackPanel>
 
                 <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Content="Generate" 
-                        Command="{Binding GenerateCommand}" 
-                        IsEnabled="{Binding InputText, Converter={StaticResource StringNotEmptyConverter}}"
+                        Command="{Binding GenerateCommand}"                         
                         Style="{StaticResource RoundedButtonStyle}"
-                        helpers:ButtonHelper.CornerRadius="15"
-                        FontFamily="Segoe UI"
-                        FontSize="16"
+                        helpers:ButtonHelper.CornerRadius="15"                        
+                        FontSize="12pt"
                         Margin="10"
                         Padding="10,2" 
                         HorizontalAlignment="Right"
@@ -166,23 +200,18 @@
                             Visibility="{Binding IsCopiedToClipboardVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                             HorizontalAlignment="Right" 
                             VerticalAlignment="Center">
-                    <Label Content="Copied to Clipboard" 
-                           FontFamily="Segoe UI"
-                           FontSize="12pt"
+                    <Label Content="Copied to Clipboard"                            
+                           FontSize="11pt"
                            Foreground="Green"
                            Margin="0,0,10,0" />
-                    <Image Width="32" Height="32" Source="/Resources/copied.png" Margin="0,0,15,0" />
+                    <Image Width="26" Height="26" Source="/Resources/copied.png" Margin="0,0,18,0" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
                     <Button 
-                            Margin="10,5"                           
-                            Width="40"  
-                            Height="40"
-                            helpers:ButtonHelper.CornerRadius="10"   
-                            IsEnabled="{Binding IsFileParser}"
-                            Command="{Binding OpenFileCommand}"
-                            Style="{StaticResource RoundedButtonStyle}">
+                        Command="{Binding OpenFileCommand}"                             
+                        IsEnabled="{Binding IsFileParser}"                            
+                        Style="{StaticResource IconButtonStyle}">
                         <Image Width="30" Height="30" Source="/Resources/open_file.png" />
                         <Button.ToolTip>
                             <ToolTip>
@@ -194,13 +223,8 @@
                     </Button>
 
                     <Button 
-                        Margin="10,5"                           
-                        Width="40"  
-                        Height="40"
-                        helpers:ButtonHelper.CornerRadius="10"   
-                        IsEnabled="{Binding IsSortEnabled}"
-                        Command="{Binding SortLinesCommand}"
-                        Style="{StaticResource RoundedButtonStyle}">
+                        Command="{Binding SortLinesCommand}"                                               
+                        Style="{StaticResource IconButtonStyle}">
                         <Image Width="30" Height="30" Source="/Resources/sort.png" />
                         <Button.ToolTip>
                             <ToolTip>
@@ -212,13 +236,9 @@
                     </Button>
 
                     <Button 
-                            Margin="10,5"                           
-                            Width="40"  
-                            Height="40"
-                            IsEnabled="{Binding InputText, Converter={StaticResource StringNotEmptyConverter}}"
-                            Command="{Binding ClearAllCommand}" 
-                            helpers:ButtonHelper.CornerRadius="10"
-                            Style="{StaticResource RoundedButtonStyle}">
+                        Command="{Binding ClearAllCommand}" 
+                        IsEnabled="{Binding InputText, Converter={StaticResource StringNotEmptyConverter}}"                                                        
+                        Style="{StaticResource IconButtonStyle}">
                         <Image Width="30" Height="30" Source="/Resources/clear.png" />
                         <Button.ToolTip>
                             <ToolTip>
@@ -231,13 +251,9 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
                     <Button 
-                        Margin="10,5"                           
-                        Width="40"  
-                        Height="40"
-                        helpers:ButtonHelper.CornerRadius="10" 
-                        IsEnabled="{Binding IsSaveFileEnabled}"
-                        Command="{Binding SaveFileCommand}"
-                        Style="{StaticResource RoundedButtonStyle}">
+                        Command="{Binding SaveFileCommand}" 
+                        IsEnabled="{Binding IsSaveFileEnabled}"                       
+                        Style="{StaticResource IconButtonStyle}">
                         <Image Width="30" Height="30" Source="/Resources/save.png"/>
                         <Button.ToolTip>
                             <ToolTip>
@@ -249,13 +265,9 @@
                     </Button>
 
                     <Button 
-                        Margin="10,5"                           
-                        Width="40"  
-                        Height="40"
-                        helpers:ButtonHelper.CornerRadius="10"
-                        IsEnabled="{Binding GeneratedCode, Converter={StaticResource StringNotEmptyConverter}}"
                         Command="{Binding CopyToClipboardCommand}"
-                        Style="{StaticResource RoundedButtonStyle}">
+                        IsEnabled="{Binding GeneratedCode, Converter={StaticResource StringNotEmptyConverter}}"                        
+                        Style="{StaticResource IconButtonStyle}">
                         <Image Width="30" Height="30" Source="/Resources/clipboard.png"/>
                         <Button.ToolTip>
                             <ToolTip>
@@ -269,18 +281,17 @@
             </Grid>
         </Border>
                 
-        <Border  Grid.Column="0" Grid.Row="2" Margin="5" Padding="5" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="White">
+        <Border  Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardBorderStyle}">
             <avalon:TextEditor 
                 x:Name="InputText"                
-                behavior:AvalonEditBehavior.Text="{Binding InputText, Mode=TwoWay}" 
-                FontFamily="Consolas" 
-                FontSize="12pt"
-                Padding="10,5,0,0"                
+                behavior:AvalonEditBehavior.Text="{Binding InputText, Mode=TwoWay}"                             
                 ShowLineNumbers="{Binding IsFileParser, Converter={StaticResource InverseBooleanConverter}}"
                 Loaded="InputText_Loaded"                     
                 PreviewDragOver="InputText_PreviewDragOver"                
                 helpers:DropCommandHelper.DropCommand="{Binding HandleDropCommand}"
-                IsReadOnly="{Binding IsFileParser}" >
+                IsReadOnly="{Binding IsFileParser}" 
+                Background="White"
+                Style="{StaticResource TextEditorStyle}">
                 <avalon:TextEditor.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Copy" Command="{Binding CopyInputCommand}" />
@@ -294,17 +305,15 @@
         </Border>
 
         <GridSplitter Grid.Column="1" Grid.Row="2"  Width="4" Background="Gray" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext" Margin="0,5"/>
-               
-        <Border  Grid.Column="2" Grid.Row="2" Margin="5" Padding="5" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="WhiteSmoke">
+
+        <Border  Grid.Column="2" Grid.Row="2" Style="{StaticResource StandardBorderStyle}" Background="WhiteSmoke">
             <avalon:TextEditor  
                     x:Name="OutputText"               
-                    behavior:AvalonEditBehavior.Text="{Binding GeneratedCode, Mode=TwoWay}" 
-                    FontFamily="Consolas" 
-                    FontSize="12pt"
-                    Padding="10,5,0,0"                
+                    behavior:AvalonEditBehavior.Text="{Binding GeneratedCode, Mode=TwoWay}"                                   
                     Background="WhiteSmoke"
                     SyntaxHighlighting="C#"
-                    IsReadOnly="True" >
+                    IsReadOnly="True" 
+                    Style="{StaticResource TextEditorStyle}">
                 <avalon:TextEditor.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Copy" Command="{Binding CopyOutputCommand}" />
@@ -320,7 +329,7 @@
                       HorizontalAlignment="Stretch" 
                       ResizeBehavior="PreviousAndNext" Margin="5,0"/>
 
-        <Border  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Margin="5,5,5,10" Padding="5" BorderThickness="2" BorderBrush="Red" CornerRadius="5" Background="White">
+        <Border  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Style="{StaticResource StandardBorderStyle}" Margin="5,5,5,10">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto"
                       behavior:ScrollViewerBehavior.AutoScroll="True">
