@@ -74,9 +74,6 @@ namespace PropGen.WPF.ViewModels
         [ObservableProperty]
         private bool isCopiedToClipboardVisible = false;
 
-        [ObservableProperty]
-        private bool isSortEnabled = false;        
-
         #endregion
 
         #region Constructors
@@ -339,7 +336,7 @@ namespace PropGen.WPF.ViewModels
         private bool CanCopyOutput() => _outputEditor != null && !_outputEditor.TextArea.Selection.IsEmpty;
         private bool CanSelectAllOutput() => _outputEditor != null && !string.IsNullOrWhiteSpace(_outputEditor.Text);
         private bool CanGenerate() => _inputEditor != null && !string.IsNullOrWhiteSpace(_inputEditor.Text);
-        private bool CanSortLines() => _inputEditor != null && !string.IsNullOrWhiteSpace(_inputEditor.Text) && !IsFileParser;
+        private bool CanSortLines() => _inputEditor != null && LineSortHelper.HasMoreThanOneLine(_inputEditor.Text) && !IsFileParser;
 
         private void RaiseAllCanExecuteInputChanged()
         {

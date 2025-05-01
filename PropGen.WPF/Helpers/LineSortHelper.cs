@@ -66,6 +66,43 @@ namespace PropGen.WPF.Helpers
             return sb.ToString();
         }
 
+        public static bool HasMoreThanOneLine(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            int i = 0;
+            int length = text.Length;
+
+            // Find first newline
+            while (i < length)
+            {
+                char c = text[i];
+                if (c == '\r')
+                {
+                    i++;
+                    if (i < length && text[i] == '\n') i++; // handle \r\n
+                    break;
+                }
+                else if (c == '\n')
+                {
+                    i++;
+                    break;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            // If no newline was found, single line
+            if (i >= length)
+                return false;
+
+            // If more text exists after the first newline, we have more than one line
+            return i < length;
+        }
+
         private static bool TryParseTypeNameFormat(string line, out string name)
         {
             name = string.Empty;
