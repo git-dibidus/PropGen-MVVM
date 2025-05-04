@@ -16,7 +16,7 @@ namespace PropGen.WPF.Services
 #if DEBUG
             _appFolder = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "", "AppData");
 #else
-            _appFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PriceSearchTool");
+            _appFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PropGenMVVM");
 #endif
             _jsonSerializerOptions = new JsonSerializerOptions
             {
