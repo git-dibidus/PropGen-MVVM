@@ -22,7 +22,7 @@
         FontFamily="Segoe UI"
         FontSize="10pt"
         Background="LightSkyBlue"
-        Icon="/Resources/AppIcon.ico">
+        Icon="/AppIcon.ico">
 
     <Window.Resources>
         <ResourceDictionary>
