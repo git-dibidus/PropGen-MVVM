@@ -6,10 +6,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>    
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <None Remove="Resources\AppIcon.ico" />
+    <None Remove="AppIcon.ico" />
     <None Remove="Resources\clear.png" />
     <None Remove="Resources\clipboard.png" />
     <None Remove="Resources\copied.png" />
@@ -19,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="AppIcon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\clear.png" />
     <Resource Include="Resources\copied.png" />
     <Resource Include="Resources\open_file.png" />
@@ -36,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\AppIcon.ico" />
     <Resource Include="Resources\clipboard.png" />
     <Resource Include="Resources\save.png" />
     <Resource Include="Resources\sort.png" />
