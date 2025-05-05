@@ -9,7 +9,6 @@ using PropGen.Core.Models;
 using PropGen.Core.Services;
 using PropGen.WPF.Helpers;
 using PropGen.WPF.Services;
-using System.Printing;
 
 namespace PropGen.WPF.ViewModels
 {
@@ -74,6 +73,9 @@ namespace PropGen.WPF.ViewModels
         [ObservableProperty]
         private bool isCopiedToClipboardVisible = false;
 
+        [ObservableProperty]
+        private string title = string.Empty;
+
         #endregion
 
         #region Constructors
@@ -92,6 +94,7 @@ namespace PropGen.WPF.ViewModels
             _dialogService = dialogService;
 
             NamingStyleOptions = GetFieldNamingStyles();
+            Title = $"MVVM Property Generator  (V {AppVersionHelper.InformationalVersion})";
         }
 
         #endregion

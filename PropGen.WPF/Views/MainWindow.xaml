@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:PropGen.WPF.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MVVM Property Generator" 
+        Title="{Binding Title}" 
         Width="{Binding AppData.Window.Width, Mode=TwoWay}"
         Height="{Binding AppData.Window.Height, Mode=TwoWay}"         
         Top="{Binding AppData.Window.Top, Mode=TwoWay}" 
