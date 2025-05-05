@@ -38,7 +38,7 @@ A powerful tool for C# developers to quickly generate MVVM-compatible properties
 1. Enter properties in the editor, one per line, in either format:
    - `PropertyName, PropertyType`
    - `PropertyType PropertyName`
-2. Click "Generate" to create the MVVM properties
+2. Click "Generate" or hit the F10 key to create the MVVM properties
 3. Copy output to Clipboard
 
 ### File Input Mode
