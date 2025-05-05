@@ -1,5 +1,8 @@
 ﻿namespace PropGen.WPF.Services
 {
+    /// <summary>
+    /// Provides simplified message box display functionality with standardized styling.
+    /// </summary>
     public static class MsgBox
     {
         public static void Show(string message, MessageType type)

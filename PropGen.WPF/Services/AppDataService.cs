@@ -5,6 +5,9 @@ using PropGen.WPF.Helpers;
 
 namespace PropGen.WPF.Services
 {
+    /// <summary>
+    /// Provides services for managing and persisting application state data.
+    /// </summary>
     public class AppDataService : IAppDataService
     {        
         private readonly string _appFolder;
@@ -48,6 +51,9 @@ namespace PropGen.WPF.Services
         }
     }
 
+    /// <summary>
+    /// Represents the persistent state of the application.
+    /// </summary>
     public class ApplicationData
     {
         public bool IsFileParser { get; set; } = false;
@@ -61,9 +67,7 @@ namespace PropGen.WPF.Services
             GenerateEqualityCheck = true,
             WrapInRegions = true,
             IsCompactStyle = true,
-            IsMvvmToolkitStyle = false,
-            GenerateFieldAttributes = true,
-            FieldAttributes = string.Empty
+            IsMvvmToolkitStyle = false            
         };
 
         public WindowLocationAndSize Window { get; set; } = new WindowLocationAndSize

@@ -5,6 +5,12 @@ using PropGen.Core.Models;
 
 namespace PropGen.Core.Services
 {
+    /// <summary>
+    /// Service for parsing property definitions from plain text input. Supports two formats:
+    /// "Type Name" or "Name,Type" per line. Validates syntax, checks for duplicates, and 
+    /// converts valid entries into PropertyInfo objects. Maintains line numbers for error 
+    /// reporting and collects all parsing issues while continuing to process subsequent lines.
+    /// </summary>
     public class TextParserService : ITextParserService
     {                
         public PropertyParserResult ParseText(string inputText)

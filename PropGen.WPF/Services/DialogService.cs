@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace PropGen.WPF.Services
 {
+    /// <summary>
+    /// Provides centralized dialog management services for WPF applications.    
+    /// </summary>
     public class DialogService(IServiceProvider serviceProvider) : IDialogService
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;

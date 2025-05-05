@@ -6,6 +6,13 @@ using PropGen.Core.Models;
 
 namespace PropGen.Core.Services
 {
+    /// <summary>
+    /// Generates C# property implementations with INotifyPropertyChanged support in multiple styles.
+    /// Supports three generation modes: full (traditional), compact (with SetProperty helper), and
+    /// MVVM Toolkit (using ObservableObject). Handles proper formatting, namespaces, usings,
+    /// field naming conventions, and includes configurable options for equality checks, regions,
+    /// and code style preferences. Produces complete class implementations from property definitions.
+    /// </summary>
     public class PropertyCodeGenerator : IPropertyCodeGenerator
     {
         private CodeGenerationOptions _options;
@@ -316,12 +323,7 @@ namespace PropGen.Core.Services
 
             // Field declaration with attribute
             sb.AppendLine($"{indent}[ObservableProperty]");
-
-            if (_options.GenerateFieldAttributes && !string.IsNullOrEmpty(_options.FieldAttributes))
-            {
-                sb.AppendLine($"{indent}{_options.FieldAttributes}");
-            }
-
+           
             sb.AppendLine($"{indent}private {property.Type} {fieldName};");
 
             return sb.ToString();

@@ -14,9 +14,6 @@ namespace PropGen.Core.Models
         public bool WrapInRegions { get; set; } = false;
         public bool IsCompactStyle { get; set; } = false;
         public bool IsMvvmToolkitStyle { get; set; } = false;
-        //public bool MakeClassPartial { get; set; } = false;
-        public bool GenerateFieldAttributes { get; set; } = true;
-        public string FieldAttributes { get; set; } = string.Empty;
     }
 
     public enum FieldNamingStyle

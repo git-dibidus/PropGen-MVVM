@@ -7,9 +7,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PropGen.Core.Models;
 using System;
 
-
 namespace PropGen.Core.Services
 {
+    /// <summary>
+    /// Service for parsing C# source files to identify classes and properties that may need 
+    /// INotifyPropertyChanged implementation. Analyzes source code to find candidate classes 
+    /// (non-partial classes without existing INotifyPropertyChanged implementation) containing 
+    /// simple properties that could be made observable. 
+    /// </summary>
     public class SourceParserService : ISourceParserService
     {
         public PropertyParserResult ParseFile(string filePath)
