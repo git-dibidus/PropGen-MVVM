@@ -2,9 +2,9 @@
 
 A powerful tool for C# developers to quickly generate MVVM-compatible properties with `INotifyPropertyChanged` implementation. This application saves time and reduces boilerplate code when working with the MVVM pattern in WPF, MAUI, or other XAML-based frameworks.
 
-![Application Screenshot](/images/PropGen_text.png)
+![Application Screenshot](/Images/PropGen_text.png)
 
-![Application Screenshot](/images/PropGen_file.png)
+![Application Screenshot](/Images/PropGen_file.png)
 
 ## Features
 
