@@ -15,6 +15,7 @@ A powerful tool for C# developers to quickly generate MVVM-compatible properties
 - **Smart Property Generation**:
   - Generates complete property implementations with `INotifyPropertyChanged`
   - Creates backing fields and `SetProperty` helper method
+  - Supports CommunityToolkit.Mvvm style code generation
   - Maintains original class structure and namespace
 
 - **Convenient File Operations**:
