@@ -30,7 +30,7 @@ A powerful tool for C# developers to quickly generate MVVM-compatible properties
 
 ## Installation
 
-1. Download the latest release from https://github.com/git-dibidus/PropGen-MVVM/releases/tag/V1.0.0 
+1. Download the latest release from https://github.com/git-dibidus/PropGen-MVVM/releases/tag/V1.0.1 
 3. Follow the installation wizard instructions
 
 ## Usage
