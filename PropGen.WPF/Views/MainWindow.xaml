@@ -50,6 +50,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <!--<RowDefinition Height="Auto" />-->
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="150" MinHeight="50" />
@@ -58,7 +59,8 @@
             <ColumnDefinition Width="*" MinWidth="200"  />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" MinWidth="200" />
-        </Grid.ColumnDefinitions>        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+        </Grid.ColumnDefinitions>        
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
               Style="{StaticResource ModernMenuStyle}">
             <MenuItem Header="_File" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem Header="_Open C# File" Command="{Binding OpenFileCommand}" IsEnabled="{Binding IsFileParser}" Style="{StaticResource ModernMenuItemStyle}"/>
@@ -67,8 +69,9 @@
                 <MenuItem Header="_Exit" Command="{Binding CloseCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
             </MenuItem>
         </Menu>
-          <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" 
-                Style="{StaticResource StandardBorderStyle}" Margin="8,8,8,0">
+        
+        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" 
+                Style="{StaticResource StandardBorderStyle}" Margin="8,8,8,0" Padding="12,12,12,17">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -81,11 +84,10 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,8,0,0">
-                    <Label Content="File Input" 
+                <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal" VerticalAlignment="Top" Margin="10,10,0,0">
+                    <Label Content="File Input"                            
                            Style="{StaticResource ModernLabelStyle}"
                            FontSize="14"
                            FontWeight="SemiBold"/>
@@ -102,20 +104,20 @@
                        FontSize="15"
                        FontWeight="Bold"
                        Padding="0"                       
-                       Margin="20,0,0,0" />
+                       Margin="15,0,0,0" />
 
                 <CheckBox Grid.Column="1" Grid.Row="0" Content="Wrap in Regions" 
                           IsChecked="{Binding AppData.Options.WrapInRegions}" 
                           Style="{StaticResource ModernCheckBoxStyle}"
                           Margin="24,12" />
-                
+
                 <CheckBox Grid.Column="1" Grid.Row="1" Content="Compact Style" 
                           IsChecked="{Binding AppData.Options.IsCompactStyle}" 
                           IsEnabled="{Binding AppData.Options.IsMvvmToolkitStyle, Converter={StaticResource InverseBooleanConverter}}" 
                           Style="{StaticResource ModernCheckBoxStyle}"
                           VerticalAlignment="Center" 
                           Margin="24,6,0,0" />
-                
+
                 <CheckBox Grid.Column="1" Grid.Row="2" Content="MVVM Toolkit Style" 
                           IsChecked="{Binding AppData.Options.IsMvvmToolkitStyle}"
                           Style="{StaticResource ModernCheckBoxStyle}"
@@ -144,7 +146,7 @@
                            Content="Field Naming Style" 
                            Style="{StaticResource ModernLabelStyle}"
                            Margin="24,0,10,0" />
-                    
+
                     <ComboBox Grid.Row="0" Grid.Column="1"
                               Width="180"
                               ItemsSource="{Binding NamingStyleOptions}"
@@ -157,51 +159,57 @@
                            IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}"
                            Style="{StaticResource ModernLabelStyle}"
                            Margin="24,6,10,0" />
-                    
+
                     <TextBox Grid.Row="1" Grid.Column="1"
-                             Width="50" 
+                             Width="60" 
+                             MaxLength="5"
                              Text="{Binding AppData.Options.FieldPrefix}" 
                              IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}"
                              HorizontalAlignment="Left"
                              Style="{StaticResource ModernTextBoxStyle}"
                              Margin="0,6,0,0"/>
                 </Grid>
-                
-                <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Margin="24,6">
-                    
-                    
-                </StackPanel>
-                <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" Margin="24,6" 
-                            IsEnabled="{Binding SelectedNamingStyle, Converter={StaticResource FieldNamingStyleToBooleanConverter}}">
-                    
-                    
-                </StackPanel>
 
                 <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Content="Generate" 
                         Command="{Binding GenerateCommand}"                         
                         Style="{StaticResource ModernButtonStyle}"
                         helpers:ButtonHelper.CornerRadius="4"                        
                         FontSize="14"
-                        Margin="16"
+                        Margin="10"
                         Padding="16,8" 
                         HorizontalAlignment="Right"
-                        Width="150"  />
+                        VerticalAlignment="Top"
+                        Width="150" 
+                        Height="35"/>
 
                 <StackPanel Grid.Column="3" Grid.Row="2" Orientation="Horizontal" 
                             Visibility="{Binding IsCopiedToClipboardVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                             HorizontalAlignment="Right" 
                             VerticalAlignment="Center">
-                    
+
                     <Label Content="Copied to Clipboard"
                            Style="{StaticResource ModernLabelStyle}"
                            FontSize="13"
                            Foreground="Green"
                            Margin="0,0,10,0" />
-                    
-                    <Image Width="26" Height="26" Source="/Resources/copied.png" Margin="0,0,20,0" />
-                </StackPanel>                
-                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="0,5,0,0">
-                    <Button 
+
+                    <Image Width="26" Height="26" Source="/Resources/copied.png" Margin="0,0,5,0" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardBorderStyle}" Background="#EEFFFF" Padding="12,0,12,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <StackPanel Grid.Column="0" Grid.Row="0"  Orientation="Horizontal" Margin="0,3">
+                    <Button                         
                         Command="{Binding OpenFileCommand}"                             
                         IsEnabled="{Binding IsFileParser}"                            
                         Style="{StaticResource IconButtonStyle}"
@@ -248,7 +256,65 @@
                         </Button.Effect>
                     </Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+                
+                <avalon:TextEditor 
+                    Grid.Column="0" Grid.Row="1"
+                    x:Name="InputText"                                                                
+                    behavior:AvalonEditBehavior.Text="{Binding InputText, Mode=TwoWay}"                             
+                    ShowLineNumbers="{Binding IsFileParser, Converter={StaticResource InverseBooleanConverter}}"
+                    Loaded="InputText_Loaded"                     
+                    PreviewDragOver="InputText_PreviewDragOver"                
+                    helpers:DropCommandHelper.DropCommand="{Binding HandleDropCommand}"
+                    IsReadOnly="{Binding IsFileParser}" 
+                    Background="#EEFFFF"
+                    Style="{StaticResource TextEditorStyle}">
+                    <avalon:TextEditor.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Copy" Command="{Binding CopyInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+                            <MenuItem Header="Paste" Command="{Binding PasteInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+                            <MenuItem Header="Cut" Command="{Binding CutInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+                            <Separator />
+                            <MenuItem Header="Select All" Command="{Binding SelectAllInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+                        </ContextMenu>
+                    </avalon:TextEditor.ContextMenu>
+                </avalon:TextEditor>
+                </Grid>
+        </Border>
+        
+        <GridSplitter Grid.Column="1" Grid.Row="2"  
+                      Width="6" 
+                      Background="{StaticResource BorderBrush}" 
+                      HorizontalAlignment="Center" 
+                      ResizeBehavior="PreviousAndNext" 
+                      Margin="0,8"
+                      Panel.ZIndex="1">
+            <GridSplitter.Template>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Border Style="{StaticResource ModernGridSplitterStyle}"
+                            Width="6">
+                        <StackPanel HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    Margin="0">
+                            <Ellipse Style="{StaticResource GridSplitterHandleStyle}"/>
+                            <Ellipse Style="{StaticResource GridSplitterHandleStyle}"/>
+                            <Ellipse Style="{StaticResource GridSplitterHandleStyle}"/>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </GridSplitter.Template>
+        </GridSplitter>
+
+        <Border Grid.Column="2" Grid.Row="2" Style="{StaticResource StandardBorderStyle}" Background="#F5FFFA" Padding="12,0,12,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal"  HorizontalAlignment="Right" Margin="0,3">
                     <Button 
                         Command="{Binding SaveFileCommand}" 
                         IsEnabled="{Binding IsSaveFileEnabled}"                       
@@ -270,7 +336,7 @@
                         IsEnabled="{Binding GeneratedCode, Converter={StaticResource StringNotEmptyConverter}}"                        
                         Style="{StaticResource IconButtonStyle}"
                         helpers:ButtonHelper.CornerRadius="22"
-                        Margin="10,5">
+                        Margin="10,5">              
                         <Image Width="28" Height="28" Source="/Resources/clipboard.png"/>
                         <Button.ToolTip>
                             <ToolTip>
@@ -282,67 +348,27 @@
                         </Button.Effect>
                     </Button>
                 </StackPanel>
+
+                <avalon:TextEditor  
+                    Grid.Column="0" Grid.Row="1" 
+                        x:Name="OutputText"               
+                        behavior:AvalonEditBehavior.Text="{Binding GeneratedCode, Mode=TwoWay}"                                   
+                        Background="#F5FFFA"
+                        SyntaxHighlighting="C#"
+                        IsReadOnly="True" 
+                        Style="{StaticResource TextEditorStyle}">
+                    <avalon:TextEditor.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Copy" Command="{Binding CopyOutputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+                            <Separator />
+                            <MenuItem Header="Select All" Command="{Binding SelectAllOutputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+                        </ContextMenu>
+                    </avalon:TextEditor.ContextMenu>
+                </avalon:TextEditor>
             </Grid>
         </Border>
-          <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource StandardBorderStyle}" Background="#EEFFFF">
-            <avalon:TextEditor 
-                x:Name="InputText"                
-                behavior:AvalonEditBehavior.Text="{Binding InputText, Mode=TwoWay}"                             
-                ShowLineNumbers="{Binding IsFileParser, Converter={StaticResource InverseBooleanConverter}}"
-                Loaded="InputText_Loaded"                     
-                PreviewDragOver="InputText_PreviewDragOver"                
-                helpers:DropCommandHelper.DropCommand="{Binding HandleDropCommand}"
-                IsReadOnly="{Binding IsFileParser}" 
-                Background="#EEFFFF"
-                Style="{StaticResource TextEditorStyle}">
-                <avalon:TextEditor.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Copy" Command="{Binding CopyInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-                        <MenuItem Header="Paste" Command="{Binding PasteInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-                        <MenuItem Header="Cut" Command="{Binding CutInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-                        <Separator />
-                        <MenuItem Header="Select All" Command="{Binding SelectAllInputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-                    </ContextMenu>
-                </avalon:TextEditor.ContextMenu>
-            </avalon:TextEditor>
-        </Border><GridSplitter Grid.Column="1" Grid.Row="2"  
-                      Width="6" 
-                      Background="{StaticResource BorderBrush}" 
-                      HorizontalAlignment="Center" 
-                      ResizeBehavior="PreviousAndNext" 
-                      Margin="0,8"
-                      Panel.ZIndex="1">
-            <GridSplitter.Template>
-                <ControlTemplate TargetType="{x:Type GridSplitter}">
-                    <Border Style="{StaticResource ModernGridSplitterStyle}"
-                            Width="6">
-                        <StackPanel HorizontalAlignment="Center" 
-                                    VerticalAlignment="Center" 
-                                    Margin="0">
-                            <Ellipse Style="{StaticResource GridSplitterHandleStyle}"/>
-                            <Ellipse Style="{StaticResource GridSplitterHandleStyle}"/>
-                            <Ellipse Style="{StaticResource GridSplitterHandleStyle}"/>
-                        </StackPanel>
-                    </Border>
-                </ControlTemplate>
-            </GridSplitter.Template>
-        </GridSplitter>        <Border Grid.Column="2" Grid.Row="2" Style="{StaticResource StandardBorderStyle}" Background="#F5FFFA">
-            <avalon:TextEditor  
-                    x:Name="OutputText"               
-                    behavior:AvalonEditBehavior.Text="{Binding GeneratedCode, Mode=TwoWay}"                                   
-                    Background="#F5FFFA"
-                    SyntaxHighlighting="C#"
-                    IsReadOnly="True" 
-                    Style="{StaticResource TextEditorStyle}">
-                <avalon:TextEditor.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Copy" Command="{Binding CopyOutputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-                        <Separator />
-                        <MenuItem Header="Select All" Command="{Binding SelectAllOutputCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-                    </ContextMenu>
-                </avalon:TextEditor.ContextMenu>
-            </avalon:TextEditor>
-        </Border><GridSplitter Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"  
+        
+        <GridSplitter Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"  
                       Height="6" 
                       Background="{StaticResource BorderBrush}"
                       HorizontalAlignment="Stretch" 
@@ -364,7 +390,9 @@
                     </Border>
                 </ControlTemplate>
             </GridSplitter.Template>
-        </GridSplitter>        <Border Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Style="{StaticResource StandardBorderStyle}" Margin="8,0,8,12" Background="#F1F8E9">
+        </GridSplitter>  
+        
+        <Border Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Style="{StaticResource StandardBorderStyle}" Margin="8,0,8,12" Background="#F1F8E9">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto"
                           Style="{StaticResource ModernScrollViewerStyle}"
