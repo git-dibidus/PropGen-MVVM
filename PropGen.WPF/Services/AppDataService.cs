@@ -59,7 +59,8 @@ namespace PropGen.WPF.Services
         public bool IsFileParser { get; set; } = false;
 
         public CodeGenerationOptions Options { get; set; } = new CodeGenerationOptions
-        {           
+        {
+            NotificationInterfaceName = "INotifyPropertyChanged",
             ImplementNotificationInterface = true,
             FieldNamingStyle = FieldNamingStyle.CamelCase,
             FieldPrefix = string.Empty,

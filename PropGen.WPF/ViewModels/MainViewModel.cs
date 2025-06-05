@@ -44,7 +44,7 @@ namespace PropGen.WPF.ViewModels
         public ObservableCollection<int> ErrorLines { get; } = new();
 
         [ObservableProperty]
-        private ApplicationData appData = new();
+        private ApplicationData appData = new();        
 
         [ObservableProperty]
         private ObservableCollection<KeyValuePair<FieldNamingStyle, string>> namingStyleOptions;
@@ -54,6 +54,9 @@ namespace PropGen.WPF.ViewModels
 
         [ObservableProperty]
         private bool isFileParser = false;
+
+        [ObservableProperty]
+        private bool isImplementInterfaceEnabled = false;
 
         [ObservableProperty]
         private string inputText = string.Empty;
@@ -94,7 +97,7 @@ namespace PropGen.WPF.ViewModels
             _dialogService = dialogService;
 
             NamingStyleOptions = GetFieldNamingStyles();
-            Title = $"MVVM Property Generator  (V {AppVersionHelper.InformationalVersion})";
+            Title = $"MVVM Property Generator  (V {AppVersionHelper.InformationalVersion})";            
         }
 
         #endregion
@@ -125,6 +128,11 @@ namespace PropGen.WPF.ViewModels
             {
                 AppData.Options.FieldNamingStyle = value.Key;
             }
+        }
+
+        private void OnIsMvvmToolkitStyleChanged()
+        {            
+            IsImplementInterfaceEnabled = IsFileParser && !AppData.Options.IsMvvmToolkitStyle;
         }
 
         #endregion
@@ -168,6 +176,7 @@ namespace PropGen.WPF.ViewModels
             try
             {
                 StatusText = string.Empty;
+                IsCopiedToClipboardVisible = false;
                 ErrorLines.Clear();
 
                 PropertyParserResult result = IsFileParser ?
@@ -373,6 +382,7 @@ namespace PropGen.WPF.ViewModels
             ModeText = isFileMode ? "File Input Mode" : "Text Input Mode";
             ClearAllWithoutConfirmation();
             AppData.IsFileParser = isFileMode;
+            IsImplementInterfaceEnabled = isFileMode && !AppData.Options.IsMvvmToolkitStyle;
         }
 
         private ObservableCollection<KeyValuePair<FieldNamingStyle, string>> GetFieldNamingStyles()
@@ -397,6 +407,14 @@ namespace PropGen.WPF.ViewModels
                 IsFileParser = AppData.IsFileParser;
                 SelectedNamingStyle = NamingStyleOptions.Single(x => x.Key == AppData.Options.FieldNamingStyle);
                 ApplyModeChange(IsFileParser);
+
+                AppData.Options.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(CodeGenerationOptions.IsMvvmToolkitStyle))
+                    {
+                        OnIsMvvmToolkitStyleChanged();
+                    }
+                };
             }
             catch (Exception ex)
             {
